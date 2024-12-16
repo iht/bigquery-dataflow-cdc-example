@@ -157,7 +157,7 @@ Choose a dataset name (for instance, `data_playground`):
 And then create the dataset from the command line:
 
 ```shell
-bq mk -d --data_location=$REGION $DATASET_NAME
+bq mk -d --data_location=$GCP_REGION $DATASET_NAME
 ```
 
 ### Service account
@@ -182,7 +182,7 @@ gcloud projects add-iam-policy-binding $YOUR_PROJECT \
 
 gcloud projects add-iam-policy-binding $YOUR_PROJECT \
 --member="serviceAccount:$SERVICE_ACCOUNT_NAME@$YOUR_PROJECT.iam.gserviceaccount.com" \
---role="roles/pubsub.subscriber"
+--role="roles/pubsub.editor"
 
 gcloud projects add-iam-policy-binding $YOUR_PROJECT \
 --member="serviceAccount:$SERVICE_ACCOUNT_NAME@$YOUR_PROJECT.iam.gserviceaccount.com" \
@@ -228,11 +228,12 @@ And then run the pipeline:
 ```shell
 TEMP_LOCATION=gs://$YOUR_PROJECT/tmp
 SUBSCRIPTION=projects/$YOUR_PROJECT/subscriptions/$SUBSCRIPTION_NAME
-NETWORK=regions/$REGION/subnetworks/$SUBNETWORK_NAME
+NETWORK=regions/$GCP_REGION/subnetworks/$SUBNETWORK_NAME
 SERVICE_ACCOUNT=$SERVICE_ACCOUNT_NAME@$YOUR_PROJECT.iam.gserviceaccount.com
 
 ./gradlew run -Pargs="
 --pipeline=taxi-sessions \
+--runner=DataflowRunner \
 --project=$YOUR_PROJECT \
 --region=$GCP_REGION \
 --tempLocation=$TEMP_LOCATION \
