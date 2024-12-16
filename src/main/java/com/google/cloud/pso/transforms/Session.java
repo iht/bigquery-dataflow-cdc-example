@@ -77,6 +77,7 @@ public final class Session {
       if (lateDataWaitSeconds() > 0) {
         sessionTrigger =
             AfterWatermark.pastEndOfWindow()
+                .withEarlyFirings(AfterProcessingTime.pastFirstElementInPane())
                 .withLateFirings(
                     AfterProcessingTime.pastFirstElementInPane()
                         .plusDelayOf(Duration.standardSeconds(lateDataWaitSeconds())));

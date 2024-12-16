@@ -40,14 +40,25 @@ normally used to publish messages with specific ids and/or timestamps.
 
 ## Data output
 
-We want to achieve two goals with this pipeline:
-
-- The second goal is grouping together all the messages that belong to the
+The goal is grouping together all the messages that belong to the
 same taxi ride, and recovering the initial and end timestamps, the initial
 and end status (ride_status) and calculating the duration of the trip in
 seconds. We have to insert these sessions in streaming in BigQuery, doing
 upserts. We want to deal with potential late data too, recalculating the
 sessions if necessary.
+
+The pipeline uses three triggers:
+- An early trigger for every single message received before the watermark
+- A trigger when the watermark is reached.
+- A late trigger for every single late message before a certain threshold
+(configurable).
+
+So in Bigquery, you will see some sessions that are "partial" (the end
+status is not `dropoff` yet, but those sessions should be all eventually complete).
+
+In addition to this, the output is written to different tables, depending on the
+first character of the session id. This is done just to show how to write to dynamic
+destinations with BigQueryIO and using change-data-capture / upserts.
 
 ## gcloud authentication
 

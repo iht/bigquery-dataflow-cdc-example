@@ -89,7 +89,8 @@ public final class TaxiSessionsPipeline {
         BigQueryIO.<RideSession>write()
             .to(
                 (ValueInSingleWindow<RideSession> s) -> {
-                  String table = s.getValue().getSessionId().substring(0, 2);
+                  String table =
+                      String.format("sesions_%s", s.getValue().getSessionId().substring(0, 1));
                   return new TableDestination(
                       String.format("%s:%s.%s", project, dataset, table),
                       "Just a table to showcase dynamic destinations with upserts");
