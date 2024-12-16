@@ -130,6 +130,11 @@ spotless {
 		endWithNewline()
 	}
 
+	flexmark {
+	target '**/*.md' // you have to set the target manually
+	flexmark() // or flexmark('0.64.8') // version is optional
+	}
+
 	java {
 		target project.fileTree(project.rootDir) {
 			include '**/*.java'

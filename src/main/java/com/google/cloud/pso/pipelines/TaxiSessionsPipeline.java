@@ -42,11 +42,6 @@ public final class TaxiSessionsPipeline {
 
   public static Pipeline createPipeline(TaxiSessionsOptions opts) {
     // Destination tables
-    TableReference rideEventsTable = new TableReference();
-    rideEventsTable.setProjectId(opts.getProject());
-    rideEventsTable.setDatasetId(opts.getDestinationDataset());
-    rideEventsTable.setTableId(opts.getRidesDestinationTable());
-
     TableReference sessionsTable = new TableReference();
     sessionsTable.setProjectId(opts.getProject());
     sessionsTable.setDatasetId(opts.getDestinationDataset());

@@ -47,12 +47,6 @@ public interface TaxiSessionsOptions extends GcpOptions {
 
   void setSessionsDestinationTable(String table);
 
-  @Description("Destination table for the rides")
-  @Required
-  String getRidesDestinationTable();
-
-  void setRidesDestinationTable(String table);
-
   @Description("Destination table for parsing errors")
   @Required
   String getParsingErrorsDestinationTable();
