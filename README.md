@@ -252,8 +252,6 @@ SERVICE_ACCOUNT=$SERVICE_ACCOUNT_NAME@$YOUR_PROJECT.iam.gserviceaccount.com
 --serviceAccount=$SERVICE_ACCOUNT \
 --subnetwork=$NETWORK \
 --enableStreamingEngine \
---filesToStage=$DATAFLOW_JAR,$JAR \
---dataflowWorkerJar=$WORKER_JAR \
 --rideEventsSubscription=$SUBSCRIPTION \
 --destinationDataset=$DATASET_NAME \
 --sessionsDestinationTable=$SESSIONS_TABLE \
