@@ -229,6 +229,7 @@ And then run the pipeline:
 TEMP_LOCATION=gs://$YOUR_PROJECT/tmp
 SUBSCRIPTION=projects/$YOUR_PROJECT/subscriptions/$SUBSCRIPTION_NAME
 NETWORK=regions/$REGION/subnetworks/$SUBNETWORK_NAME
+SERVICE_ACCOUNT=$SERVICE_ACCOUNT_NAME@$YOUR_PROJECT.iam.gserviceaccount.com
 
 ./gradlew run -Pargs="
 --pipeline=taxi-sessions \
