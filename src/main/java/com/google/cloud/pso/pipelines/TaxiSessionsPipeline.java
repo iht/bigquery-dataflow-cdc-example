@@ -16,7 +16,9 @@
 
 package com.google.cloud.pso.pipelines;
 
+import com.google.api.services.bigquery.model.Clustering;
 import com.google.api.services.bigquery.model.TableReference;
+import com.google.api.services.bigquery.model.TimePartitioning;
 import com.google.cloud.pso.data.CustomDataTypes.ParsingError;
 import com.google.cloud.pso.data.CustomDataTypes.RideEvent;
 import com.google.cloud.pso.data.CustomDataTypes.RideSession;
@@ -29,6 +31,7 @@ import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
 import org.apache.beam.sdk.io.gcp.bigquery.RowMutationInformation;
 import org.apache.beam.sdk.io.gcp.bigquery.TableDestination;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
+import org.apache.beam.sdk.transforms.SerializableFunction;
 import org.apache.beam.sdk.values.PCollection;
 import org.apache.beam.sdk.values.PCollectionTuple;
 import org.apache.beam.sdk.values.ValueInSingleWindow;
@@ -84,20 +87,23 @@ public final class TaxiSessionsPipeline {
     // Upsert the session data
     String project = opts.getProject();
     String dataset = opts.getDestinationDataset();
+
+    // Primary key for CDC and clustering for performance
+    ImmutableList<String> primaryKeys = ImmutableList.of("session_id");
+    Clustering clustering = new Clustering();
+    clustering.setFields(primaryKeys);
+
+    SerializableFunction<ValueInSingleWindow<RideSession>, TableDestination> tableFunc =
+        (ValueInSingleWindow<RideSession> s) -> rideSessionTDestination(s, project, dataset);
+
     rideSessions.apply(
         "Upsert sessions in BQ",
         BigQueryIO.<RideSession>write()
-            .to(
-                (ValueInSingleWindow<RideSession> s) -> {
-                  String table =
-                      String.format("sesions_%s", s.getValue().getSessionId().substring(0, 1));
-                  return new TableDestination(
-                      String.format("%s:%s.%s", project, dataset, table),
-                      "Just a table to showcase dynamic destinations with upserts");
-                })
+            .to(tableFunc)
             .useBeamSchema()
             .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
-            .withPrimaryKey(ImmutableList.of("session_id"))
+            .withPrimaryKey(primaryKeys)
+            .withClustering(clustering)
             .withMethod(BigQueryIO.Write.Method.STORAGE_API_AT_LEAST_ONCE)
             .withRowMutationInformationFn(
                 rs ->
@@ -106,5 +112,25 @@ public final class TaxiSessionsPipeline {
                         Integer.toHexString(rs.getCountEvents()))));
 
     return pipeline;
+  }
+
+  private static TableDestination rideSessionTDestination(
+      ValueInSingleWindow<RideSession> s, String project, String dataset) {
+    // TimePartitioning is not serializable, so we need to wrap it in this function to be able to
+    // pass it to BigQueryIO.
+
+    // Partitioning by ingestion day
+    TimePartitioning partitioning = new TimePartitioning();
+    // By default, we partition by _INGESTIONTIME, but we could partition by other fields
+    // for instance: partitioning.setField("end_timestamp");
+    partitioning.setType("DAY");
+    partitioning.setExpirationMs(
+        365L * 24L * 3600L * 1000L); // 1 year of expiration time for the partitions
+
+    String table = String.format("sesions_%s", s.getValue().getSessionId().substring(0, 1));
+    return new TableDestination(
+        String.format("%s:%s.%s", project, dataset, table),
+        "Just a table to showcase dynamic destinations with upserts",
+        partitioning);
   }
 }
