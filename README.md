@@ -48,6 +48,7 @@ upserts. We want to deal with potential late data too, recalculating the
 sessions if necessary.
 
 The pipeline uses three triggers:
+
 - An early trigger for every single message received before the watermark
 - A trigger when the watermark is reached.
 - A late trigger for every single late message before a certain threshold
