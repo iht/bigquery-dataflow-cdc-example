@@ -56,6 +56,9 @@ public final class TaxiSessionsPipeline {
     errorsTable.setTableId(opts.getParsingErrorsDestinationTable());
 
     Pipeline pipeline = Pipeline.create(opts);
+    // The messages in the Pubsub topic have an attribute (metadata) with their timestamp, let's
+    // use that attribute to set the timestamp for our messages and work on event time (windows,
+    // triggers, etc).
     PCollection<String> rides =
         pipeline.apply(
             "Read rides",
