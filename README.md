@@ -163,9 +163,7 @@ gcloud pubsub subscriptions pull $SUBSCRIPTION_NAME --limit 3 | grep " {" | cut 
 
 ### BigQuery dataset
 
-Choose a dataset name (for instance, `data_playground`):
-
-And then create the dataset from the command line:
+Create the dataset with name chosen above:
 
 ```shell
 bq mk -d --data_location=$GCP_REGION $DATASET_NAME
@@ -204,7 +202,7 @@ gcloud projects add-iam-policy-binding $YOUR_PROJECT \
 --role="roles/bigquery.dataEditor"
 ```
 
-## Build
+## Build a FAT jar
 
 To create a FAT jar, ready to be deployed in Dataflow without additional
 dependencies, run the following command:
@@ -213,15 +211,17 @@ dependencies, run the following command:
 ./gradlew build
 ```
 
+But see below, you don't need to create a JAR for deployment just for testing this repo.
+
 ## Test
 
-Run the following command:
+Execute the following command to run all the unit tests
 
 ```shell
 ./gradlew test
 ```
 
-## Run
+## Run the pipeline in Dataflow
 
 Make sure that you have followed the steps above, and you are authenticated and
 have created the input subscription and the output BigQuery datasets, prior to
@@ -234,7 +234,7 @@ Check your current version with:
 java -version
 ```
 
-And then run the pipeline:
+You can run the pipeline recompiling from the sources, there is no need to generate a FAT jar:
 
 ```shell
 TEMP_LOCATION=gs://$YOUR_PROJECT/tmp
