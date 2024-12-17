@@ -66,9 +66,8 @@ destinations with BigQueryIO and using change-data-capture / upserts.
 You need to have a Google Cloud project with editor or owner permissions,
 in order to be able to create the resources for this demo.
 
-IF you have not specified your user and project yet, do that now. It is
-recommended to create a `gcloud` configuration to switch between projects more
-easily.
+You need to have [the Google Cloud SDK installed](https://cloud.google.com/sdk/docs/install-sdk),
+or alternatively you can use the Cloud Shell in your project.
 
 The code snippets below set some environment variables that will be useful to
 run other commands. You can use these code snippets locally or in the Cloud Shell.
