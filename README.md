@@ -19,15 +19,15 @@ the data contained in a message in that topic:
 
 ```json
 {
-"ride_id": "328bec4b-0126-42d4-9381-cb1dbf0e2432",
-"point_idx": 305,
-"latitude": 40.776270000000004,
-"longitude": -73.99111,
-"timestamp": "2020-03-27T21:32:51.48098-04:00",
-"meter_reading": 9.403651,
-"meter_increment": 0.030831642,
-"ride_status": "enroute",
-"passenger_count": 1
+  "ride_id": "328bec4b-0126-42d4-9381-cb1dbf0e2432",
+  "point_idx": 305,
+  "latitude": 40.776270000000004,
+  "longitude": -73.99111,
+  "timestamp": "2020-03-27T21:32:51.48098-04:00",
+  "meter_reading": 9.403651,
+  "meter_increment": 0.030831642,
+  "ride_status": "enroute",
+  "passenger_count": 1
 }
 ```
 
@@ -51,8 +51,8 @@ The pipeline uses three triggers:
 
 - An early trigger for every single message received before the watermark
 - A trigger when the watermark is reached.
-- A late trigger for every single late message before a certain threshold
-(configurable).
+- A late trigger for every single late message before a certain threshold,
+  which is configurable.
 
 So in Bigquery, you will see some sessions that are "partial" (the end
 status is not `dropoff` yet, but those sessions should be all eventually complete).
@@ -171,7 +171,7 @@ bq mk -d --data_location=$GCP_REGION $DATASET_NAME
 
 ### Service account
 
-Let's now create a Dataflow worker service account, with permissions to read from
+Let's now create a Dataflow worker service accounst, with permissions to read from
 the Pub/Sub subscription and to write to BigQuery:
 
 ```shell
@@ -257,3 +257,4 @@ SERVICE_ACCOUNT=$SERVICE_ACCOUNT_NAME@$YOUR_PROJECT.iam.gserviceaccount.com
 --sessionsDestinationTable=$SESSIONS_TABLE \
 --parsingErrorsDestinationTable=$ERRORS_TABLE"
 ```
+
