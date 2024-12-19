@@ -43,7 +43,10 @@ public class RunPipeline {
     }
 
     if (p != null) {
-      String jobName = getJobName(pipelineToRun);
+      String jobName = options.getJobName();
+      // Set name only if not empty.
+      // If jobName is already set, it might be because we are updating the job.
+      if (jobName == null || jobName.isEmpty()) jobName = getJobName(pipelineToRun);
       p.getOptions().setJobName(jobName);
       p.run().waitUntilFinish();
     } else {
