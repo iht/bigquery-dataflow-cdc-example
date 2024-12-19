@@ -20,14 +20,16 @@ import com.google.cloud.pso.TestData;
 import com.google.cloud.pso.data.CustomDataTypes.RideEvent;
 import com.google.cloud.pso.data.CustomDataTypes.RideSession;
 import com.google.common.collect.ImmutableList;
+import java.util.List;
 import org.apache.beam.sdk.extensions.avro.coders.AvroCoder;
 import org.apache.beam.sdk.testing.PAssert;
 import org.apache.beam.sdk.testing.TestPipeline;
 import org.apache.beam.sdk.testing.TestStream;
-import org.apache.beam.sdk.transforms.Combine;
-import org.apache.beam.sdk.transforms.Count;
+import org.apache.beam.sdk.transforms.MapElements;
 import org.apache.beam.sdk.values.PCollection;
 import org.apache.beam.sdk.values.PCollectionTuple;
+import org.apache.beam.sdk.values.TimestampedValue;
+import org.apache.beam.sdk.values.TypeDescriptors;
 import org.joda.time.Duration;
 import org.joda.time.Instant;
 import org.junit.After;
@@ -42,22 +44,25 @@ public final class SessionTransformTest {
   @Rule public final transient TestPipeline pipeline = TestPipeline.create();
 
   private PCollection<RideSession> sessions;
-  private PCollection<Long> sessionCount;
+  private PCollection<Integer> sessionCount;
 
   @Before
   public void setUp() {
 
     ImmutableList<String> testData = TestData.getTestData();
-    ImmutableList<Instant> testTimestamps = TestData.getTimestamps();
+    List<Instant> testTimestamps = TestData.getTimestamps();
 
     TestStream<String> testStream =
         TestStream.create(AvroCoder.of(String.class))
-            .addElements(testData.get(0))
-            .advanceProcessingTime(Duration.standardSeconds(2))
+            .addElements(TimestampedValue.of(testData.get(0), testTimestamps.get(0)))
+            .advanceProcessingTime(Duration.standardSeconds(1))
             .advanceWatermarkTo(testTimestamps.get(0))
-            .addElements(testData.get(1))
-            .advanceProcessingTime(Duration.standardSeconds(10))
+            .addElements(TimestampedValue.of(testData.get(1), testTimestamps.get(1)))
+            .advanceProcessingTime(Duration.standardSeconds(1))
             .advanceWatermarkTo(testTimestamps.get(1))
+            .addElements(TimestampedValue.of(testData.get(2), testTimestamps.get(2)))
+            .advanceProcessingTime(Duration.standardSeconds(1))
+            .advanceWatermarkTo(testTimestamps.get(2))
             .advanceWatermarkToInfinity();
 
     PCollection<String> msgs = pipeline.apply("Create msgs", testStream);
@@ -67,17 +72,25 @@ public final class SessionTransformTest {
     sessions =
         goodEvents.apply(
             "CreateSession",
-            Session.Calculate.builder().sessionGapSeconds(30).lateDataWaitSeconds(10).build());
+            Session.Calculate.builder().sessionGapSeconds(60).lateDataWaitSeconds(0).build());
 
     sessionCount =
-        sessions.apply("Count", Combine.globally(Count.<RideSession>combineFn()).withoutDefaults());
+        sessions.apply(
+            "Get counts",
+            MapElements.into(TypeDescriptors.integers()).via(s -> s.getCountEvents()));
   }
 
   @Test
   public void testSessionCreation() {
-    // Two different sessions
-    // PAssert.that(sessions).containsInAnyOrder(TestData.getTestSessions());
-    PAssert.that(sessionCount).containsInAnyOrder(ImmutableList.of(1L, 1L));
+
+    PAssert.that(sessions).containsInAnyOrder(TestData.getTestSessions());
+
+    // Triggers are
+    // key=1, count=1, EARLY
+    // key=1, count=1,2, EARLY (accumulated)
+    // key=1, count=2, ON_TIME
+    // key=2, count=1, ON_TIME
+    PAssert.that(sessionCount).containsInAnyOrder(ImmutableList.of(1, 1, 2, 2, 1));
   }
 
   @After

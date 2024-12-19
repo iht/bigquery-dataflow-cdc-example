@@ -94,7 +94,7 @@ public final class ParserTest {
 
   @Test
   public void testTimestampsParsing() {
-    PAssert.that(minutes).containsInAnyOrder(ImmutableList.of(42, 52, 49));
+    PAssert.that(minutes).containsInAnyOrder(ImmutableList.of(42, 43, 59));
   }
 
   @After
