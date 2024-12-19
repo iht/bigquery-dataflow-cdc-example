@@ -82,7 +82,9 @@ public final class Session {
                     AfterProcessingTime.pastFirstElementInPane()
                         .plusDelayOf(Duration.standardSeconds(lateDataWaitSeconds())));
       } else {
-        sessionTrigger = AfterWatermark.pastEndOfWindow();
+        sessionTrigger =
+            AfterWatermark.pastEndOfWindow()
+                .withEarlyFirings(AfterProcessingTime.pastFirstElementInPane());
       }
 
       PCollection<KV<String, RideEvent>> sessions =
