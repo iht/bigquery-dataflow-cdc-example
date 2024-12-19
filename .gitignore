@@ -1,4 +1,5 @@
 .vscode
+.java-version
 bin/
 ### Java template
 # Compiled class file
