@@ -82,9 +82,11 @@ public final class SessionTransformTest {
 
   @Test
   public void testSessionCreation() {
-
     PAssert.that(sessions).containsInAnyOrder(TestData.getTestSessions());
+  }
 
+  @Test
+  public void testNumberOfEventsCalculation() {
     // Triggers are
     // key=1, count=1, EARLY
     // key=1, count=1,2, EARLY (accumulated)
