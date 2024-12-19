@@ -62,6 +62,12 @@ test {
 	testLogging.showStandardStreams = true
 }
 
+java {
+toolchain {
+		languageVersion = JavaLanguageVersion.of(11)
+	}
+}
+
 compileJava {
 	options.compilerArgs.addAll(['-Xlint:deprecation', '-Xlint:unchecked'])
 	options.errorprone.disableWarningsInGeneratedCode = true   // for @Generated
