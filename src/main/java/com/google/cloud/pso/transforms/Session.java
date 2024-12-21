@@ -140,6 +140,10 @@ public final class Session {
       int count = 0;
 
       for (RideAccumulator accumulator : accumulators) {
+        if (accumulator.countEvents == 0) {
+          // Ignoring empty accumlator ("zeros")
+          continue;
+        }
         count += accumulator.countEvents;
         if (begin == null || accumulator.beginTimestamp.isBefore(begin)) {
           begin = accumulator.beginTimestamp;

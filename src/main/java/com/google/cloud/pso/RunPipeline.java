@@ -19,6 +19,7 @@ package com.google.cloud.pso;
 import com.google.cloud.pso.options.TaxiSessionsOptions;
 import com.google.cloud.pso.pipelines.TaxiSessionsPipeline;
 import java.time.Instant;
+import org.apache.beam.runners.dataflow.options.DataflowPipelineOptions;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 
@@ -43,11 +44,11 @@ public class RunPipeline {
     }
 
     if (p != null) {
-      String jobName = options.getJobName();
-      // Set name only if not empty.
-      // If jobName is already set, it might be because we are updating the job.
-      if (jobName == null || jobName.isEmpty()) jobName = getJobName(pipelineToRun);
-      p.getOptions().setJobName(jobName);
+      DataflowPipelineOptions dataflow = options.as(DataflowPipelineOptions.class);
+      // Set name only if we are not updating a Dataflow pipeline
+      if (!dataflow.isUpdate()) {
+        dataflow.setJobName(getJobName(pipelineToRun));
+      }
       p.run().waitUntilFinish();
     } else {
       System.out.println("Unrecognized pipeline type " + pipelineToRun);
