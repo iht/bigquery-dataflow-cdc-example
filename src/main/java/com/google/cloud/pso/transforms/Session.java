@@ -72,7 +72,7 @@ public final class Session {
       // Add keys to rideEvents
       PCollection<KV<String, RideEvent>> withKeys =
           rideEvents.apply(
-              "Add keys", WithKeys.of(RideEvent::getRideId).withKeyType(TypeDescriptors.strings()));
+              "AddKeys", WithKeys.of(RideEvent::getRideId).withKeyType(TypeDescriptors.strings()));
 
       // Use a late trigger only if late data wait is not zero
       Trigger sessionTrigger;
@@ -99,9 +99,9 @@ public final class Session {
                   .withAllowedLateness(Duration.standardSeconds(lateDataWaitSeconds())));
 
       PCollection<KV<String, RideAccumulator>> accumulated =
-          sessions.apply("Combine events", Combine.perKey(new SessionPropertiesCombinerFn()));
+          sessions.apply("CombineEvents", Combine.perKey(new SessionPropertiesCombinerFn()));
 
-      return accumulated.apply("Session properties", ParDo.of(new SessionPropertiesDoFn()));
+      return accumulated.apply("SessionProperties", ParDo.of(new SessionPropertiesDoFn()));
     }
   }
 

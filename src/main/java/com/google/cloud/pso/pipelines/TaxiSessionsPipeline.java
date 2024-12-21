@@ -61,12 +61,12 @@ public final class TaxiSessionsPipeline {
     // triggers, etc).
     PCollection<String> rides =
         pipeline.apply(
-            "Read rides",
+            "ReadRides",
             PubsubIO.readStrings()
                 .fromSubscription(opts.getRideEventsSubscription())
                 .withTimestampAttribute("ts"));
 
-    PCollectionTuple parsed = rides.apply("Parse JSON", Parser.TaxiEventParser.parseJson());
+    PCollectionTuple parsed = rides.apply("ParseJSON", Parser.TaxiEventParser.parseJson());
     PCollection<RideEvent> rideEvents = parsed.get(Parser.TaxiEventParser.TAXI_EVENT_TAG);
     PCollection<ParsingError> parsingErrors = parsed.get(Parser.TaxiEventParser.ERROR_TAG);
 
@@ -79,7 +79,7 @@ public final class TaxiSessionsPipeline {
                 .build());
 
     parsingErrors.apply(
-        "Append errors to BQ",
+        "AppendErrorsToBQ",
         BigQueryIO.<ParsingError>write()
             .to(errorsTable)
             .useBeamSchema()
@@ -100,7 +100,7 @@ public final class TaxiSessionsPipeline {
         (ValueInSingleWindow<RideSession> s) -> rideSessionTDestination(s, project, dataset);
 
     rideSessions.apply(
-        "Upsert sessions in BQ",
+        "UpsertSessionsBQ",
         BigQueryIO.<RideSession>write()
             .to(tableFunc)
             .useBeamSchema()
