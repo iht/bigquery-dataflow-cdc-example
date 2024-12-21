@@ -118,7 +118,7 @@ public final class CustomDataTypes {
       return new AutoValue_CustomDataTypes_RideSession.Builder();
     }
 
-    /** Builder for {@link AggregatedSession}. */
+    /** Builder for {@link RideSession}. */
     @AutoValue.Builder
     public abstract static class Builder {
       public abstract Builder setSessionId(String sessionId);
