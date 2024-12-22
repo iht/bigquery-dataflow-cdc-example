@@ -129,8 +129,8 @@ public final class Parser {
         OutputReceiver<Row> outputReceiver) {
       Row outputRow =
           Row.withSchema(this.errorRowSchema)
-              .withFieldValue("inputData", inputData)
-              .withFieldValue("errorMessage", errorMessage)
+              .withFieldValue("input_data", inputData)
+              .withFieldValue("error_message", errorMessage)
               .withFieldValue("timestamp", timestamp)
               .build();
 

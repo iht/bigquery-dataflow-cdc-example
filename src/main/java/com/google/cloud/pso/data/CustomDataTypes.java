@@ -145,10 +145,10 @@ public final class CustomDataTypes {
   @DefaultSchema(AutoValueSchema.class)
   @AutoValue
   public abstract static class ParsingError {
-    @SchemaFieldName("inputData")
+    @SchemaFieldName("input_data")
     public abstract String getInputData();
 
-    @SchemaFieldName("errorMessage")
+    @SchemaFieldName("error_message")
     public abstract String getErrorMessage();
 
     @SchemaFieldName("timestamp")
