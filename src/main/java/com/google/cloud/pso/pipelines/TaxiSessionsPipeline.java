@@ -130,7 +130,7 @@ public final class TaxiSessionsPipeline {
     partitioning.setExpirationMs(
         365L * 24L * 3600L * 1000L); // 1 year of expiration time for the partitions
 
-    String table = String.format("sesions_%s", s.getValue().getSessionId().substring(0, 1));
+    String table = String.format("sessions_%s", s.getValue().getSessionId().substring(0, 1));
     return new TableDestination(
         String.format("%s:%s.%s", project, dataset, table),
         "Just a table to showcase dynamic destinations with upserts",
