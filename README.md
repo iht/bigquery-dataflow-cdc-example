@@ -227,7 +227,7 @@ Make sure that you have followed the steps above, and you are authenticated and
 have created the input subscription and the output BigQuery datasets, prior to
 running the pipeline.
 
-Make also sure that you have Java >=11 or <=25 installed in your machine.
+Make also sure that you have Java >=21 and <=25 installed in your machine.
 Check your current version with:
 
 ```shell
