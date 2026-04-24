@@ -66,8 +66,8 @@ public final class Parser {
 
   /** Parses to Row and make sure the data conforms to the assumed schema. */
   private static class Json2Row extends PTransform<PCollection<String>, PCollectionRowTuple> {
-    public static String RESULTS_TAG = "RESULTS_TAG";
-    public static String ERROR_TAG = "ERROR_TAG";
+    static String RESULTS_TAG = "RESULTS_TAG";
+    static String ERROR_TAG = "ERROR_TAG";
 
     @Override
     public PCollectionRowTuple expand(PCollection<String> input) {

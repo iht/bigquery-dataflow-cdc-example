@@ -38,9 +38,7 @@ public class RunPipeline {
 
     Pipeline p = null;
     switch (pipelineToRun) {
-      case "taxi-sessions":
-        p = TaxiSessionsPipeline.createPipeline(options);
-        break;
+      case "taxi-sessions" -> p = TaxiSessionsPipeline.createPipeline(options);
     }
 
     if (p != null) {

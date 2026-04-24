@@ -32,28 +32,28 @@ public final class CustomDataTypes {
     public abstract String getRideId();
 
     @SchemaFieldName("point_idx")
-    public abstract Integer getPointIdx();
+    public abstract int getPointIdx();
 
     @SchemaFieldName("latitude")
-    public abstract Double getLatitude();
+    public abstract double getLatitude();
 
     @SchemaFieldName("longitude")
-    public abstract Double getLongitude();
+    public abstract double getLongitude();
 
     @SchemaFieldName("timestamp")
     public abstract Instant getTimestamp();
 
     @SchemaFieldName("meter_reading")
-    public abstract Double getMeterReading();
+    public abstract double getMeterReading();
 
     @SchemaFieldName("meter_increment")
-    public abstract Double getMeterIncrement();
+    public abstract double getMeterIncrement();
 
     @SchemaFieldName("ride_status")
     public abstract String getRideStatus();
 
     @SchemaFieldName("passenger_count")
-    public abstract Integer getPassengerCount();
+    public abstract int getPassengerCount();
 
     public static Builder builder() {
       return new AutoValue_CustomDataTypes_RideEvent.Builder();
@@ -64,21 +64,21 @@ public final class CustomDataTypes {
     public abstract static class Builder {
       public abstract Builder setRideId(String rideId);
 
-      public abstract Builder setPointIdx(Integer pointIdx);
+      public abstract Builder setPointIdx(int pointIdx);
 
-      public abstract Builder setLatitude(Double latitude);
+      public abstract Builder setLatitude(double latitude);
 
-      public abstract Builder setLongitude(Double longitude);
+      public abstract Builder setLongitude(double longitude);
 
       public abstract Builder setTimestamp(Instant timestamp);
 
-      public abstract Builder setMeterReading(Double meterReading);
+      public abstract Builder setMeterReading(double meterReading);
 
-      public abstract Builder setMeterIncrement(Double meterIncrement);
+      public abstract Builder setMeterIncrement(double meterIncrement);
 
       public abstract Builder setRideStatus(String rideStatus);
 
-      public abstract Builder setPassengerCount(Integer passengerCount);
+      public abstract Builder setPassengerCount(int passengerCount);
 
       public abstract RideEvent build();
     }
@@ -98,7 +98,7 @@ public final class CustomDataTypes {
     public abstract Instant getSessionEndTimestamp();
 
     @SchemaFieldName("count_events")
-    public abstract Integer getCountEvents();
+    public abstract int getCountEvents();
 
     @SchemaFieldName("begin_status")
     public abstract String getBeginStatus();
@@ -127,7 +127,7 @@ public final class CustomDataTypes {
 
       public abstract Builder setSessionEndTimestamp(Instant endTimestamp);
 
-      public abstract Builder setCountEvents(Integer countEvents);
+      public abstract Builder setCountEvents(int countEvents);
 
       public abstract Builder setBeginStatus(String beginStatus);
 

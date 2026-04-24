@@ -48,9 +48,9 @@ public final class Session {
   public abstract static class Calculate
       extends PTransform<PCollection<RideEvent>, PCollection<RideSession>> {
 
-    public abstract Integer sessionGapSeconds();
+    public abstract int sessionGapSeconds();
 
-    public abstract Integer lateDataWaitSeconds();
+    public abstract int lateDataWaitSeconds();
 
     public static Builder builder() {
       return new AutoValue_Session_Calculate.Builder();
@@ -59,9 +59,9 @@ public final class Session {
     /** Builder for {@link SessionTransform.Calculate}. */
     @AutoValue.Builder
     public abstract static class Builder {
-      public abstract Builder sessionGapSeconds(Integer sessionGapSeconds);
+      public abstract Builder sessionGapSeconds(int sessionGapSeconds);
 
-      public abstract Builder lateDataWaitSeconds(Integer lateDataWaitSeconds);
+      public abstract Builder lateDataWaitSeconds(int lateDataWaitSeconds);
 
       public abstract Calculate build();
     }
